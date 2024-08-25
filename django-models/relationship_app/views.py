@@ -29,7 +29,7 @@ class LibraryDetailView(DetailView):
     context_object_name = 'library'  # The context name to be used in the template
 
 
-def user_login(request):
+def login(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
@@ -40,11 +40,11 @@ def user_login(request):
         form = AuthenticationForm()
     return render(request, 'relationship_app/login.html', {'form': form})
 
-def user_logout(request):
+def logout(request):
     logout(request)
     return render(request, 'relationship_app/logout.html')
 
-def user_register(request):
+def register(request):
     if request.method == 'POST':
         form = UserCreationForm(data=request.POST)
         if form.is_valid():
