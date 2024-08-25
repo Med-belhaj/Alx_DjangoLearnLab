@@ -18,7 +18,7 @@ from django.contrib.auth.models import User
 
 
 def home(request):
-    return render(request, 'home.html')
+    return render(request, 'relationship_app/home.html')
 
 def list_books(request):
     books = Book.objects.all()
@@ -26,7 +26,7 @@ def list_books(request):
 
 class LibraryDetailView(DetailView):
     model = Library
-    template_name = 'library_detail.html'  # Specify the template to use
+    template_name = 'relationship_app/library_detail.html'  # Specify the template to use
     context_object_name = 'library'  # The context name to be used in the template
 
 # Login view
