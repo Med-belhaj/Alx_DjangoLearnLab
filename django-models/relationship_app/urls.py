@@ -1,3 +1,4 @@
+from .views import list_books
 from django.urls import path
 from .views import LoginView, LogoutView, RegisterView
 from . import views  # Import views from the same directory
