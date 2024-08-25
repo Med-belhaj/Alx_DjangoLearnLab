@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+    <h1>Welcome to the Library</h1>
+    <p><a href="{% url 'list_books' %}">View all books</a></p>
+    <p><a href="{% url 'library_detail' pk=1 %}">View library details</a></p>  <!-- Adjust the pk value as needed -->
+</body>
+</html>
