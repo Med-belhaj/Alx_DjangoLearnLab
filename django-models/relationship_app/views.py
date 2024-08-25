@@ -21,12 +21,8 @@ def home(request):
     return render(request, 'relationship_app/home.html')
 
 def list_books(request):
-    books = Library.objects.all()
+    books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
-
-def library_detail(request, pk):
-    library = get_object_or_404(Library, pk=pk)
-    return render(request, 'relationship_app/library_detail.html', {'library': library})
 
 class LibraryDetailView(DetailView):
     model = Library
