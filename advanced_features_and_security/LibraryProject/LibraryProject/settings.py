@@ -136,6 +136,7 @@ SECURE_SSL_REDIRECT = True
 SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_HSTS_SECONDS = 31536000
 
 # Specify allowed hosts
 ALLOWED_HOSTS = ['yourdomain.com']  # Update with your domain
