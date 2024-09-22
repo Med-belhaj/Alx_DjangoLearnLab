@@ -146,3 +146,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+import os
+
+# Get the port from environment variables, defaulting to 8000 if not set
+PORT = os.getenv('PORT', '8000')
