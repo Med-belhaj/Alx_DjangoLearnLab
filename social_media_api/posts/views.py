@@ -61,7 +61,7 @@ from notifications.models import Notification  # Assuming you have a Notificatio
 @permission_classes([permissions.IsAuthenticated])
 def like_post(request, pk):
     # Use get_object_or_404 to retrieve the post safely, or return a 404 error if not found
-    post = get_object_or_404(Post, pk=pk)
+    post = generics.get_object_or_404(Post, pk=pk)
 
     # Create a like object if it doesn't already exist
     like, created = Like.objects.get_or_create(user=request.user, post=post)
@@ -97,3 +97,5 @@ def unlike_post(request, pk):
         return Response({'detail': 'Post unliked.'}, status=status.HTTP_204_NO_CONTENT)
     
     return Response({'detail': 'You have not liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
+
+#generics.get_object_or_404(Post, pk=pk)
