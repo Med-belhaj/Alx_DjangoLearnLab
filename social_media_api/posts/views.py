@@ -53,17 +53,14 @@ class FeedView(generics.ListAPIView):
 from rest_framework import status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404  # Import get_object_or_404
+from django.shortcuts import get_object_or_404  # Import get_object_or_404 here
 from .models import Post, Like
-from notifications.models import Notification  # Import the Notification model
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
+from notifications.models import Notification  # Assuming you have a Notification model
 
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def like_post(request, pk):
-    # Use get_object_or_404 to retrieve the post or return a 404 error if not found
+    # Use get_object_or_404 to retrieve the post safely, or return a 404 error if not found
     post = get_object_or_404(Post, pk=pk)
 
     # Create a like object if it doesn't already exist
@@ -85,12 +82,17 @@ def like_post(request, pk):
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def unlike_post(request, pk):
-    # Use get_object_or_404 to retrieve the post or return a 404 error if not found
+    # Use get_object_or_404 to retrieve the post safely, or return a 404 error if not found
     post = get_object_or_404(Post, pk=pk)
 
     # Try to get the like object and delete it if it exists
     like = Like.objects.filter(user=request.user, post=post).first()
     if like:
+        like.delete()
+        return Response({'detail': 'Post unliked.'}, status=status.HTTP_204_NO_CONTENT)
+    
+    return Response({'detail': 'You have not liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
+
         like.delete()
         return Response({'detail': 'Post unliked.'}, status=status.HTTP_204_NO_CONTENT)
     
