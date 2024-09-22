@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token  
 from django.contrib.auth import get_user_model
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
@@ -29,14 +30,14 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        user = User.objects.create(
+        user = User.objects.create_user(  # Using create_user for proper password handling
             username=validated_data['username'],
             email=validated_data['email'],
             first_name=validated_data['first_name'],
-            last_name=validated_data['last_name']
+            last_name=validated_data['last_name'],
+            password=validated_data['password']  # No need to set_password separately
         )
-        user.set_password(validated_data['password'])
-        user.save()
+        Token.objects.create(user=user)  # Create a token for the user upon registration
         return user
 
 class UserSerializer(serializers.ModelSerializer):
