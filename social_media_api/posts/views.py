@@ -50,30 +50,42 @@ class FeedView(generics.ListAPIView):
         return Post.objects.filter(author__in=following_users).order_by('-created_at')
 
 
-from rest_framework import status, permissions, generics
-from rest_framework.response import Response
+from rest_framework import status, permissions
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from django.shortcuts import get_object_or_404  # Import get_object_or_404
 from .models import Post, Like
-from django.shortcuts import get_object_or_404
+from notifications.models import Notification  # Import the Notification model
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def like_post(request, pk):
-    # Use get_object_or_404 to retrieve the post or return a 404 error
+    # Use get_object_or_404 to retrieve the post or return a 404 error if not found
     post = get_object_or_404(Post, pk=pk)
 
     # Create a like object if it doesn't already exist
     like, created = Like.objects.get_or_create(user=request.user, post=post)
-    
+
     if not created:
         return Response({'detail': 'You have already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
     
-    return Response({'detail': 'Post liked.'}, status=status.HTTP_201_CREATED)
+    # Create a notification for the post author if the post is liked
+    Notification.objects.create(
+        recipient=post.author,
+        actor=request.user,
+        verb='liked your post',
+        target=post
+    )
+    
+    return Response({'detail': 'Post liked and notification sent.'}, status=status.HTTP_201_CREATED)
 
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def unlike_post(request, pk):
-    # Use get_object_or_404 to retrieve the post or return a 404 error
+    # Use get_object_or_404 to retrieve the post or return a 404 error if not found
     post = get_object_or_404(Post, pk=pk)
 
     # Try to get the like object and delete it if it exists
